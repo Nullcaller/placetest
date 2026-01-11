@@ -53,3 +53,13 @@ Moreover, the two algorithms seem to yield sensible results in relation to each 
 * Deviation from the bruteforce-derived optimum relative to the maximum possible range of deviation (`disoptimum-optimum`) does not exceed ~10%
 
 These observations are the result of running the sanity check part of the project 20-30 times, and in my mind provide a conclusive, if indirect, proof of correctness for algorithm implementations.
+
+To better illustrate the time complexity of the implemented algorithms, here are the graphs of execution time as a function of the number of functional cells, for the bruteforce and the annealing algorithms, respectively:
+
+![Bruteforce execution time of N graph](data/bruteforce_complexity.png)
+
+![Annealing execution time of N graph](data/annealing_complexity.png)
+
+For the bruteforce algorithm, the expected time complexity is, of course, `O(N!)`, while for the annealing algorithm it should be anywhere from `O(N)` in the best case scenario to `O(N^2)` in the worst case scenario. The observed time complexities, however, are slightly worse in both cases.
+
+I'm not entirely sure what the exact reason for that is, but to me it seems like it would probably be hardware-related, like CPU boost frequency decreasing over time or increased functional area size leading to increasingly non-local computations and therefore more cache misses. 

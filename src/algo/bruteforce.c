@@ -94,15 +94,18 @@ void bruteforce_place(Chip* chip) {
 #endif
 
 #ifdef ENABLE_BRUTEFORCE_DISOPTIMUM
+	printf("Disoptimum: %d\n", unoptimum);
+#ifdef ENABLE_BRUTEFORCE_DISOPTIMUM_PRINTOUT
 	for(unsigned int i = 0; i < func_cell_count; i++) {
 		((Cell*) func_cells[i])->x = placement_x[unoptimum_placement[i]];
 		((Cell*) func_cells[i])->y = placement_y[unoptimum_placement[i]];
 		((Cell*) func_cells[i])->placed = true;
 	}
 
-	printf("Maximally unoptimal cell placement chip (%d):\n", unoptimum);
+	printf("Maximally unoptimal cell placement chip:\n");
 	chip_print(chip);
 	printf("\n");
+#endif
 #endif
 
 	for(unsigned int i = 0; i < func_cell_count; i++) {

@@ -41,6 +41,8 @@ Chip* chip_create_filled(int func_cell_width, int func_cell_height, int io_ring_
 
 Chip* chip_copy(Chip* chip);
 
+void chip_free(Chip* chip);
+
 bool chip_create_connections(Chip* chip, unsigned int io_cell_connection_count, double avg_func_cell_connection_count);
 
 unsigned int chip_get_opt_metric(Chip* chip);
@@ -48,6 +50,8 @@ unsigned int chip_get_opt_metric(Chip* chip);
 void chip_print(Chip* chip);
 
 Cell* cell_create_empty(Chip* chip, CellType type);
+
+void cell_free(Cell* cell);
 
 unsigned int cell_get_distance(Cell* a, Cell* b);
 

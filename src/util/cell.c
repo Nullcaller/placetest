@@ -137,6 +137,15 @@ Chip* chip_copy(Chip* chip) {
 	return new_chip;
 }
 
+void chip_free(Chip* chip) {
+	for(ListNode* node = chip->cells->first; node != NULL; node = node->next)
+		cell_free(node->data);
+	list_free(chip->cells);
+	list_free(chip->func_cells);
+	list_free(chip->io_cells);
+	free(chip);
+}
+
 bool chip_create_connections(Chip* chip, unsigned int io_cell_connection_count, double avg_func_cell_connection_count) {
 	if(chip->filled != true)
 		return false;
@@ -164,11 +173,19 @@ bool chip_create_connections(Chip* chip, unsigned int io_cell_connection_count, 
 
 	chip->io_cells_connected = true;
 
-#ifdef DEBUG
-	printf("No. of connections between functional cells: %.0lf\n", round(func_cell_count*avg_func_cell_connection_count-io_cell_count*io_cell_connection_count));
+	int conn_count = round(func_cell_count*avg_func_cell_connection_count-io_cell_count*io_cell_connection_count);
+
+#ifdef CONNECTION_THRESHOLD
+	int conn_thresh = func_cell_count*(func_cell_count-1)/(func_cell_count > 2 ? 4 : 2);
+	if(conn_count < conn_thresh)
+		conn_count = conn_thresh;
 #endif
 
-	for(i = 0; i < round(func_cell_count*avg_func_cell_connection_count-io_cell_count*io_cell_connection_count); i++) {
+#ifdef DEBUG_CONNECTION_COUNT
+	printf("No. of connections between functional cells: %d\n", conn_count);
+#endif
+
+	for(i = 0; i < conn_count; i++) {
 		p = randombytes_uniform(func_cell_count);
 		q = randombytes_uniform(func_cell_count);
 		while(p == q) {
@@ -239,6 +256,11 @@ Cell* cell_create_empty(Chip* chip, CellType type) {
 	ret->type = type;
 	ret->connections = list_create_empty();
 	return ret;
+}
+
+void cell_free(Cell* cell) {
+	list_free(cell->connections);
+	free(cell);
 }
 
 unsigned int cell_get_distance(Cell* a, Cell* b) {

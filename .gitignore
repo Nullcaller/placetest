@@ -1,0 +1,11 @@
+CMakeFiles
+CMakeCache.txt
+*.cmake
+Makefile
+compile_commands.json
+
+.vscode
+.vscode/*
+.cache
+
+placetest

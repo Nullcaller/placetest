@@ -54,7 +54,7 @@ Moreover, the two algorithms seem to yield sensible results in relation to each 
 
 These observations are the result of running the sanity check part of the project 20-30 times, and in my mind provide a conclusive, if indirect, proof of correctness for algorithm implementations.
 
-To better illustrate the time complexity of the implemented algorithms, here are the graphs of execution time as a function of the number of functional cells, for the bruteforce and the annealing algorithms, respectively:
+To better illustrate the time complexity of the implemented algorithms, here are the graphs of execution time as a function of the number of functional cells, for the bruteforce and the annealing algorithms, respectively (data and graphs available in `data/placetest_complexity.ods`):
 
 ![Bruteforce execution time of N graph](data/bruteforce_complexity.png)
 

@@ -19,7 +19,7 @@ A system running Linux is required.
 
 Configuration define statements are available in `src/flags.h` and `src/config.h`, while `src/placetest.c` is the main source file, linking all other sources and containing the `main` function.
 
-## Assumptions and simplifications
+## Assumptions and Simplifications
 
 So as not to go too deep into the woods of standard cell placement shenanigans and make this project possible to implement (and run) in a timely manner, a number of key assumptions and simplifications were made.
 
@@ -36,6 +36,16 @@ And these I would classify as 'simplifications':
 * The grid and the standard cells are square (which means everything is just integer math, which is good for the CPU)
 * The standard cells don't have physical locations for inputs/outputs, it is assumed that all connections are made to the center of the standard cell
 * The value being optimized by the algorithms in this project is the total length of wire inside the chip, i.e. the sum of lengths of all connections, which I assume isn't the case for real semiconductor devices, as they would probably be optimized for the shortest length of the longest path instead (to reduce the maximum delay and increase the clocking frequency), but as finding the longest path is in and of itself an NP-hard problem, I decided not to tackle it here
+
+## The Annealing Algorithm
+
+The implemented annealing algorithm takes three arguments: starting temperature, temperature schedule and the timeout parameter. The temperature schedule argument is meant to be independent of cell count, i.e. yield roughly the same results at different cell counts. To that end, it is scaled down proportionally to the number of cells, so as to ensure the percentage of cells swapped at a given temperature stays approximately the same as the cell number changes.
+
+On each iteration of the algorithm, two random cells are swapped, and the optimization metric (lower is better) for the resultant chip design is calculated. If optimization metric changed upwards by a value that's smaller than the temperature, the temperature decreases by a certain value, set by the temperature schedule. If, on the other hand, the change of optimization metric is larger than the temperature, the swap is reversed, and the procedure is tried again, and again, and again. However, after the number of tries exceeds the value of the timeout parameter, the algorithm gives up and decreases the temperature. In any case, the algorithm moves on to the next iteration.
+
+Once the temperature hits zero, within the floating point margin of error, the algorithm is done and the cell placement is commited into the chip structure.
+
+The motivation for the overall structure of the algorithm is fairly simple. The gradual lowering of the temperature allows us to spend some time on escaping the local minimums of the optimization criteria, while multiple tries for each swap potentially allow to actually find a valid swap in the myriads of possible swap pairs.   
 
 ## Results
 
@@ -63,3 +73,11 @@ To better illustrate the time complexity of the implemented algorithms, here are
 For the bruteforce algorithm, the expected time complexity is, of course, `O(N!)`, while for the annealing algorithm it should be anywhere from `O(N)` in the best case scenario to `O(N^2)` in the worst case scenario. The observed time complexities, however, are slightly worse in both cases.
 
 I'm not entirely sure what the exact reason for that is, but to me it seems like it would probably be hardware-related, like CPU boost frequency decreasing over time or increased functional area size leading to increasingly non-local computations and therefore more cache misses. 
+
+## Where This Leaves Us
+
+Modern tools for standard cell placement have evolved significantly since Intel's TimberWolf made its debut. The algorithm implementations presented in this repository certainly have room for improvement. But even assuming a 10x improvement in base speed, an optimistic time complexity of `O(N^1,33)` and a perfect parallelization of the workflow to a 200-core system, it will take almost an entire day to place some 10 million standard cells, which is a fairly modest amount by today's standards. And keep in mind that placement is just _one_ of the steps in semiconductor design. You also need to route all of the standard cell connections, then evaluate the design for design rule violations, constraint violations, optimization possibilities...
+
+Now, the actual state-of-the-art placement algorithms used in actual software used to design production silicon are closely-guarded trade secrets. But if we go off what [Wikipedia](https://en.wikipedia.org/wiki/Placement_(electronic_design_automation)#Basic_techniques) has to say about the modern placement algorithms, it seems to me like they all rely on the fact that, in real silicon, connections between cells are usually clustered. If you were to somehow build a human-readable graph of what a modern chip looks like, you'd probably see long _chains_ of logic connecting to a few independent blobs. This means that the task of optimizing placement can be split into optimizing global and local placement, separately.
+
+Implementing such an algorithm would be an interesting challenge. But it is far out of scope of this project. For one, it wouldn't even really be comparable to the algorithms implemented here. Completing an exhaustive search on the simplest of topologies for which it would make sense to use such an algorithm, would probably be impossible, and even the annealing algorithm would probably take a very long time. The aforementioned 200-core system is, alas, not something I really have access to.

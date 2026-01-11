@@ -67,6 +67,7 @@ void sanity_check() {
 	chip_print(bruteforce_chip);
 	printf("\n");
 #endif
+	chip_free(bruteforce_chip);
 #endif
 
 #ifdef SANITY_CHECK_ENABLE_ANNEALING
@@ -85,7 +86,10 @@ void sanity_check() {
 	chip_print(annealing_chip);
 	printf("\n");
 #endif
+	chip_free(annealing_chip);
 #endif
+
+	chip_free(chip);
 }
 
 void bruteforce_complexity_test() {

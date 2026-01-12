@@ -38,6 +38,11 @@ int main(int argc, char* argv[]) {
 	annealing_complexity_test();
 #endif
 
+#ifdef ENABLE_LARGE_TEST
+	printf("Annealing large test:\n");
+	annealing_large_test();
+#endif
+
 }
 
 void sanity_check() {
@@ -180,3 +185,22 @@ void annealing_complexity_test() {
 		tick = !tick;
 	}
 }
+
+void annealing_large_test() {
+	unsigned int n = 60, m = 60;
+
+	Chip* chip;
+	float sec;
+	
+	chip = chip_create_filled(n, m, COMPLEXITY_TEST_IO_RING_DEPTH);
+	chip_create_connections(chip, COMPLEXITY_TEST_CONNECTIONS_NUM_PER_IO_CELL, COMPLEXITY_TEST_CONNECTIONS_AVG_NUM_PER_FUNC_CELL);
+
+	clock_start();
+	annealing_place(chip, COMPLEXITY_TEST_START_TEMPERATURE, COMPLEXITY_TEST_SCHEDULE, COMPLEXITY_TEST_TIMEOUT);
+	sec = clock_stop();
+
+	chip_free(chip);
+
+	printf("%d: %f\n", n*m, sec);
+}
+

@@ -9,4 +9,6 @@ void annealing_schedule_test(unsigned int cell_func_width, unsigned int cell_fun
 
 void annealing_complexity_test();
 
+void annealing_large_test();
+
 #endif

@@ -32,6 +32,10 @@ static void annealing_do_swap_(Cell* a, Cell* b) {
 void annealing_place(Chip* chip, double temp, double schedule, unsigned int timeout) {
 	annealing_initialize_chip_(chip);
 
+#ifdef ENABLE_ANNEALING_BEFORE_AFTER_PRINTOUT
+	printf("Annealing starting opt metric: %u\n", chip_get_opt_metric(chip));
+#endif
+
 	unsigned int func_cell_count;
 	void** func_cells = list_to_array(chip->func_cells, &func_cell_count);
 
@@ -40,7 +44,13 @@ void annealing_place(Chip* chip, double temp, double schedule, unsigned int time
 	unsigned int p, q;
 	int opt = chip_get_opt_metric(chip), new_opt;
 	unsigned int tries = 0;
-	while(temp > ANNEALING_FLOAT_CMP_THRESHOLD) {
+	while(
+#ifdef ANNEALING_STOP_TEMP_OVERRIDE
+		temp > ANNEALING_STOP_TEMP_OVERRIDE
+#else
+		temp > ANNEALING_FLOAT_CMP_THRESHOLD
+#endif
+	) {
 		p = randombytes_uniform(func_cell_count);
 		q = randombytes_uniform(func_cell_count);
 		
@@ -73,4 +83,8 @@ void annealing_place(Chip* chip, double temp, double schedule, unsigned int time
 			temp += schedule;
 		}
 	}
+
+#ifdef ENABLE_ANNEALING_BEFORE_AFTER_PRINTOUT
+	printf("Annealing resultant opt metric: %u\n", chip_get_opt_metric(chip));
+#endif
 }

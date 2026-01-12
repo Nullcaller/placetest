@@ -5,7 +5,7 @@ This repository contains implementations for the following standard cell placeme
 * Exhaustive search with factorial time complexity
 * A simulated annealing algorithm which I presume is, in essence, very similar to what Intel might've used to design the i386 processor, the rest being history
 
-Building the project requires [libsodium](https://doc.libsodium.org/doc). Generating random numbers using libsodium is probably not exactly ideal for performance, as the project obviously doesn't a require a CSPRNG, but I caried over a lot of code from [passutil](https://github.com/Nullcaller/passutil), so I used it for the sake of expedience.
+Building the project requires [libsodium](https://doc.libsodium.org/doc). Generating random numbers using libsodium is probably not exactly ideal for performance, as the project obviously doesn't a require a CSPRNG, but I caried over a lot of code from [passutil](https://github.com/Nullcaller/passutil), so I used it for the sake of expedience. You should be able to install libsodium for development by performing `apt install libsodium-dev` or an equivalent command for your Linux distribution.
 
 To build the project and launch the executable, navigate to the cloned git repository and simply execute:
 

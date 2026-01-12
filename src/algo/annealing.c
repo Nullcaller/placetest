@@ -1,8 +1,8 @@
 #include<sodium.h>
 
-#include "annealing.h"
+#include<config.h>
 
-#define ANNEALING_FLOAT_CMP_THRESHOLD 0.0001
+#include "annealing.h"
 
 static void annealing_initialize_chip_(Chip* chip) {
 	ListNode* current = chip->func_cells->first;

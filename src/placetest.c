@@ -187,20 +187,17 @@ void annealing_complexity_test() {
 }
 
 void annealing_large_test() {
-	unsigned int n = 60, m = 60;
-
 	Chip* chip;
 	float sec;
-	
-	chip = chip_create_filled(n, m, COMPLEXITY_TEST_IO_RING_DEPTH);
-	chip_create_connections(chip, COMPLEXITY_TEST_CONNECTIONS_NUM_PER_IO_CELL, COMPLEXITY_TEST_CONNECTIONS_AVG_NUM_PER_FUNC_CELL);
+
+	chip = chip_create_filled(LARGE_TEST_CELL_FUNC_WIDTH, LARGE_TEST_CELL_FUNC_HEIGHT, LARGE_TEST_IO_RING_DEPTH);
+	chip_create_connections(chip, LARGE_TEST_CONNECTIONS_NUM_PER_IO_CELL, LARGE_TEST_CONNECTIONS_AVG_NUM_PER_FUNC_CELL);
 
 	clock_start();
-	annealing_place(chip, COMPLEXITY_TEST_START_TEMPERATURE, COMPLEXITY_TEST_SCHEDULE, COMPLEXITY_TEST_TIMEOUT);
+	annealing_place(chip, LARGE_TEST_START_TEMPERATURE, LARGE_TEST_SCHEDULE, LARGE_TEST_TIMEOUT);
 	sec = clock_stop();
 
 	chip_free(chip);
 
-	printf("%d: %f\n", n*m, sec);
+	printf("%d: %f\n", LARGE_TEST_CELL_FUNC_WIDTH*LARGE_TEST_CELL_FUNC_HEIGHT, sec);
 }
-

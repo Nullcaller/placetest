@@ -5,7 +5,7 @@ This repository contains implementations for the following standard cell placeme
 * Exhaustive search with factorial time complexity
 * A simulated annealing algorithm which I presume is, in essence, very similar to what Intel might've used to design the i386 processor, the rest being history
 
-Building the project requires [libsodium](https://doc.libsodium.org/doc). Generating random numbers using libsodium is probably not exactly ideal for performance, as the project obviously doesn't a require a CSPRNG, but I caried over a lot of code from [passutil](https://github.com/Nullcaller/passutil), so I used it for the sake of expedience. You should be able to install libsodium for development by performing `apt install libsodium-dev` or an equivalent command for your Linux distribution.
+Building the project requires a system running Linux and [libsodium](https://doc.libsodium.org/doc). Generating random numbers using libsodium is probably not exactly ideal for performance, as the project obviously doesn't a require a CSPRNG, but I caried over a lot of code from [passutil](https://github.com/Nullcaller/passutil), so I used it for the sake of expedience. You should be able to install libsodium for development by performing `apt install libsodium-dev` or an equivalent command for your Linux distribution.
 
 To build the project and launch the executable, navigate to the cloned git repository and simply execute:
 
@@ -14,8 +14,6 @@ cmake .
 make
 ./placetest
 ```
-
-A system running Linux is required.
 
 Configuration define statements are available in `src/flags.h` and `src/config.h`, while `src/placetest.c` is the main source file, linking all other sources and containing the `main` function.
 
@@ -81,3 +79,14 @@ Modern tools for standard cell placement have evolved significantly since Intel'
 Now, the actual state-of-the-art placement algorithms used in actual software used to design production silicon are closely-guarded trade secrets. But if we go off what [Wikipedia](https://en.wikipedia.org/wiki/Placement_(electronic_design_automation)#Basic_techniques) has to say about the modern placement algorithms, it seems to me like they all rely on the fact that, in real silicon, connections between cells are usually clustered. If you were to somehow build a human-readable graph of what a modern chip looks like, you'd probably see long _chains_ of logic connecting to a few independent blobs. This means that the task of optimizing placement can be split into optimizing global and local placement, separately.
 
 Implementing such an algorithm would be an interesting challenge. But it is far out of scope of this project. For one, it wouldn't even really be comparable to the algorithms implemented here. Completing an exhaustive search on the simplest of topologies for which it would make sense to use such an algorithm, would probably be impossible, and even the annealing algorithm would probably take a very long time. The aforementioned 200-core system is, alas, not something I really have access to.
+
+### Literature
+
+* [Ken Shirriff's blog: Reverse engineering standard cell logic in the Intel 386 processor](https://www.righto.com/2024/01/intel-386-standard-cells.html)
+* [VLSI Cell Placement Techniques (K. Shahookar and P. Mazumder)](doc/cellplacement.pdf)
+* [Performance of a parallel algorithm for standard cell placement (Mark Jones and Prithviraj Banerjee)](doc/parallel-annealing.pdf)
+* [Graywolf, a fork of the last open-source version of TimberWolf](https://github.com/rubund/graywolf)
+* [qflow, an open-source digital synthesis flow](http://www.opencircuitdesign.com/qflow/)
+* [TimberWolf documentation](doc/TimberWolf-doc.pdf)
+* [TimberWolf 3.2 paper](doc/timberwolf.pdf)
+
